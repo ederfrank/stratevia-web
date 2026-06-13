@@ -23,8 +23,8 @@
   /* ===== FORMULARIO → SUPABASE ===== */
   const form = document.getElementById('contact-form');
   const msg = document.getElementById('form-msg');
-  const SUPABASE_URL = 'TU_PROJECT_URL';
-  const SUPABASE_ANON = 'TU_ANON_KEY';
+  const SUPABASE_URL = 'sb_publishable_i7S-SCCEn4qIgM3SvYVCcg_LNGCIj4c';
+  const SUPABASE_ANON = 'sb_publishable_i7S-SCCEn4qIgM3SvYVCcg_LNGCIj4c';
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const data = Object.fromEntries(new FormData(form));
