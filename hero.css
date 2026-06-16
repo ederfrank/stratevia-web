@@ -1,16 +1,31 @@
-/* ===== HERO SPLIT CON VIDEO — robot más grande ===== */
+/* ===== HERO SPLIT CON VIDEO — llenado completo del área ===== */
 #hero{
-  position:relative;min-height:100vh;display:flex;align-items:center;
-  overflow:hidden;padding-top:80px;
+  position:relative;
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:1fr;
+  overflow:hidden;
+  padding-top:80px;
   background:radial-gradient(120% 90% at 80% 20%,rgba(20,50,70,.45),var(--bg) 72%)
 }
 .hero-wrap{
-  position:relative;z-index:3;max-width:var(--max);width:100%;
-  margin:0 auto;padding:0 clamp(20px,5vw,56px);
-  display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:center;
+  position:relative;z-index:3;
+  max-width:var(--max);width:100%;
+  margin:0 auto;
+  padding:0 clamp(20px,5vw,56px);
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:32px;
+  align-items:stretch;
   min-height:calc(100vh - 80px);
 }
-.hero-left{min-width:0}
+.hero-left{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-block:clamp(32px,5vh,60px);
+}
 .badge{
   display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--teal);
   border:1px solid var(--line);padding:7px 14px;border-radius:40px;margin-bottom:22px;
@@ -31,22 +46,21 @@
 .hero-stats b{font-size:1.6rem;color:var(--teal);font-weight:800}
 .hero-stats span{font-size:.8rem;color:var(--muted)}
 
-/* Visual con video — ocupa toda la altura del hero */
+/* Visual con video — rellena TODA la columna derecha de arriba a abajo */
 .hero-visual{
   position:relative;
-  height:calc(100vh - 100px);
-  max-height:860px;
-  min-height:500px;
+  /* Extiende el contenedor hasta los bordes verticales del hero */
+  margin-top:-80px;       /* compensa el padding-top del hero */
+  margin-bottom:0;
+  align-self:stretch;
   animation:fadeUp 1s .35s both;
 }
 .robot-frame{
-  position:relative;
-  width:100%;
-  height:100%;
-  border-radius:18px;
+  position:absolute;
+  inset:0;                /* ocupa el 100% del .hero-visual */
+  border-left:1px solid var(--line);
+  box-shadow:-30px 0 80px rgba(0,0,0,.4),0 0 70px rgba(58,209,197,.08);
   overflow:hidden;
-  border:1px solid var(--line);
-  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 70px rgba(58,209,197,.12);
   transition:transform .15s ease-out;
 }
 .robot-video{
@@ -54,13 +68,13 @@
   width:100%;
   height:100%;
   object-fit:cover;
-  object-position:center top;
+  object-position:center center;
 }
 .robot-overlay{
   position:absolute;inset:0;pointer-events:none;
   background:
-    linear-gradient(90deg,rgba(6,18,26,.45),transparent 35%),
-    linear-gradient(0deg,rgba(6,18,26,.3),transparent 50%)
+    linear-gradient(90deg,rgba(6,18,26,.5),transparent 30%),
+    linear-gradient(0deg,rgba(6,18,26,.25),transparent 40%)
 }
 .glow-screen{
   position:absolute;right:6%;top:16%;width:46%;height:48%;pointer-events:none;
@@ -86,10 +100,18 @@
 @keyframes scrollD{0%{opacity:0;top:7px}40%{opacity:1}100%{opacity:0;top:18px}}
 
 @media(max-width:980px){
-  .hero-wrap{grid-template-columns:1fr;gap:28px;min-height:auto}
-  .hero-visual{order:2;height:60vw;max-height:480px;min-height:300px}
+  .hero-wrap{grid-template-columns:1fr;align-items:start;min-height:auto}
+  .hero-visual{
+    order:2;
+    position:relative;
+    margin-top:0;
+    height:65vw;
+    max-height:500px;
+    min-height:280px;
+  }
+  .robot-frame{border-radius:14px;border:1px solid var(--line)}
 }
 @media(max-width:560px){
-  .hero-visual{height:70vw;min-height:260px}
+  .hero-visual{height:72vw;min-height:240px}
 }
 @media(prefers-reduced-motion:reduce){.glow-screen{animation:none}}
