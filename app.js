@@ -71,16 +71,16 @@
 
       const [record] = await res.json();
 
-      /* PASO 2: Llamar Edge Function para enviar correos */
+      /* PASO 2: Llamar Edge Function para enviar correos vía Resend */
       fetch(SUPABASE_URL + '/functions/v1/notify-contacto', {
         method: 'POST',
         headers: {
           'Content-Type':  'application/json',
+          'apikey':        SUPABASE_ANON,
           'Authorization': 'Bearer ' + SUPABASE_ANON
         },
         body: JSON.stringify({ record })
-      }).catch(err => console.warn('Email notification error:', err));
-      // No esperamos la respuesta del email para no bloquear al usuario
+      }).catch(err => console.warn('Email error:', err));
 
       msg.style.color = '#3ad1c5';
       msg.textContent = '¡Gracias, ' + data.nombre + '! Recibimos tu mensaje. Te contactaremos en menos de 24 horas.';
