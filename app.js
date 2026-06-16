@@ -1,4 +1,4 @@
-/* ===== STRATEVIA AI — app.js ===== */
+/* ===== STRATEVIA AI — app.js con Supabase + Resend via Edge Function ===== */
 (function(){
   'use strict';
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -23,10 +23,11 @@
   }, {threshold:.15});
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  /* ===== SUPABASE ===== */
+  /* ===== CONFIG ===== */
   const SUPABASE_URL  = 'https://niauybhdvijbxlhpuivp.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pYXV5YmhkdmlqYnhsaHB1aXZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NzUwNzAsImV4cCI6MjA5NTE1MTA3MH0.cBkbJTfDaKV7YrzInZN09D1aM4Vwa9x4GQBdOJ2icVI';
 
+  /* ===== FORMULARIO ===== */
   const form = document.getElementById('contact-form');
   const msg  = document.getElementById('form-msg');
 
@@ -46,13 +47,14 @@
     msg.textContent = 'Enviando...';
 
     try {
+      /* PASO 1: Guardar en Supabase */
       const res = await fetch(SUPABASE_URL + '/rest/v1/contactos', {
         method: 'POST',
         headers: {
           'Content-Type':  'application/json',
           'apikey':        SUPABASE_ANON,
           'Authorization': 'Bearer ' + SUPABASE_ANON,
-          'Prefer':        'return=minimal'
+          'Prefer':        'return=representation'
         },
         body: JSON.stringify({
           nombre:  data.nombre,
@@ -64,15 +66,28 @@
 
       if(!res.ok){
         const txt = await res.text();
-        throw new Error(res.status + ': ' + txt);
+        throw new Error('Supabase ' + res.status + ': ' + txt);
       }
+
+      const [record] = await res.json();
+
+      /* PASO 2: Llamar Edge Function para enviar correos */
+      fetch(SUPABASE_URL + '/functions/v1/notify-contacto', {
+        method: 'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': 'Bearer ' + SUPABASE_ANON
+        },
+        body: JSON.stringify({ record })
+      }).catch(err => console.warn('Email notification error:', err));
+      // No esperamos la respuesta del email para no bloquear al usuario
 
       msg.style.color = '#3ad1c5';
       msg.textContent = '¡Gracias, ' + data.nombre + '! Recibimos tu mensaje. Te contactaremos en menos de 24 horas.';
       form.reset();
 
     } catch(err){
-      console.error('Supabase error:', err);
+      console.error('Error:', err);
       msg.style.color = '#ff8080';
       msg.textContent = 'Hubo un problema al enviar. Escríbenos a contacto@strateviaapp.com';
     } finally {
