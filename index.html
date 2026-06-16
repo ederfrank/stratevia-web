@@ -17,12 +17,14 @@
 </head>
 <body>
 
+<!-- ===== HEADER ===== -->
 <header id="site-header">
   <a href="#hero" class="logo" aria-label="Stratevia AI inicio">
     <svg class="logo-mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
       <defs>
         <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#3ad1c5"/><stop offset="1" stop-color="#4f7cff"/>
+          <stop offset="0" stop-color="#3ad1c5"/>
+          <stop offset="1" stop-color="#4f7cff"/>
         </linearGradient>
       </defs>
       <path d="M20 2 L34 10 L34 26 L20 38 L6 26 L6 10 Z" fill="none" stroke="url(#lg)" stroke-width="2"/>
@@ -31,6 +33,7 @@
     </svg>
     <span class="logo-text">STRATEVIA<span class="logo-ai">.ai</span></span>
   </a>
+
   <nav id="nav">
     <a href="#servicios">Servicios</a>
     <a href="#proceso">Proceso</a>
@@ -38,12 +41,16 @@
     <a href="#nosotros">Nosotros</a>
     <a href="#contacto" class="nav-cta">Hablemos</a>
   </nav>
+
   <button id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </header>
 
+<!-- ===== HERO con fondo 3D ===== -->
 <section id="hero">
+  <canvas id="bg-canvas"></canvas>
+  <div class="hero-overlay"></div>
   <div class="hero-wrap">
     <div class="hero-left">
       <span class="badge">⬡ Inteligencia Artificial aplicada a tu negocio</span>
@@ -67,13 +74,73 @@
       </div>
     </div>
 
-    <div class="hero-visual" aria-hidden="true">
-      <div class="robot-frame">
-        <video class="robot-video" autoplay loop muted playsinline poster="robot-poster.jpg">
-          <source src="robot.mp4" type="video/mp4" />
-        </video>
-        <div class="robot-overlay"></div>
-        <div class="glow-screen"></div>
+    <!-- ESCENA: robot + dashboard financiero animado -->
+    <div class="scene" aria-hidden="true">
+      <div class="scene-stage">
+        <!-- Dashboard -->
+        <div class="fin-panel">
+          <div class="fin-head">
+            <h4>ANÁLISIS FINANCIERO · IA</h4>
+            <span class="ytd">RENDIMIENTO <b id="ytd">+12.4%</b></span>
+          </div>
+          <div class="fin-mid">
+            <div class="chart-box">
+              <span class="lbl">MERCADO ▲</span>
+              <svg class="svg-canvas" id="candles" viewBox="0 0 200 120" preserveAspectRatio="none"></svg>
+            </div>
+            <div class="kpis">
+              <div class="kpi"><span>ROE</span><b id="kpi-roe">18.6%</b></div>
+              <div class="kpi"><span>ROA</span><b id="kpi-roa">9.7%</b></div>
+              <div class="kpi"><span>MARGEN</span><b id="kpi-mg">14.2%</b></div>
+              <div class="kpi"><span>R. CORRIENTE</span><b id="kpi-rc">1.8</b></div>
+              <div class="kpi"><span>FLUJO CAJA</span><b id="kpi-fc">S/ 1.2M</b></div>
+            </div>
+          </div>
+          <div class="tickers" id="tickers">
+            <div class="tk"><span class="nm">S&P</span><span class="vl" data-v="5328">5328</span><span class="up">▲</span></div>
+            <div class="tk"><span class="nm">NASDAQ</span><span class="vl" data-v="16832">16832</span><span class="up">▲</span></div>
+            <div class="tk"><span class="nm">BVL</span><span class="vl" data-v="24190">24190</span><span class="up">▲</span></div>
+            <div class="tk"><span class="nm">USD/PEN</span><span class="vl" data-v="372">3.72</span><span class="up">▲</span></div>
+          </div>
+        </div>
+
+        <!-- Robot SVG -->
+        <svg class="robot" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#dfeef0"/><stop offset="1" stop-color="#9fb6bd"/>
+            </linearGradient>
+            <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3ad1c5"/><stop offset="1" stop-color="#4f7cff"/>
+            </linearGradient>
+          </defs>
+          <!-- torso -->
+          <rect x="44" y="150" width="60" height="78" rx="18" fill="url(#metal)"/>
+          <rect x="56" y="166" width="36" height="46" rx="10" fill="#0e2230"/>
+          <circle cx="74" cy="189" r="9" fill="none" stroke="url(#glow)" stroke-width="2"/>
+          <!-- cuello -->
+          <rect x="64" y="132" width="20" height="20" rx="6" fill="#9fb6bd"/>
+          <!-- cabeza -->
+          <g class="r-head">
+            <rect x="44" y="78" width="56" height="56" rx="22" fill="url(#metal)"/>
+            <rect x="52" y="92" width="40" height="30" rx="14" fill="#06121a"/>
+            <circle class="r-eye" cx="72" cy="107" r="11" fill="none" stroke="url(#glow)" stroke-width="3"/>
+            <circle cx="72" cy="107" r="4" fill="#3ad1c5"/>
+            <rect x="68" y="64" width="8" height="14" rx="3" fill="#9fb6bd"/>
+            <circle cx="72" cy="62" r="4" fill="#4f7cff"/>
+          </g>
+          <!-- brazo izquierdo fijo -->
+          <rect x="30" y="158" width="16" height="50" rx="8" fill="#b9ccd2"/>
+          <!-- brazo derecho articulado (apunta) -->
+          <g class="r-arm">
+            <rect x="98" y="152" width="46" height="15" rx="7" fill="url(#metal)"/>
+            <circle cx="100" cy="159" r="9" fill="#7e98a0"/>
+            <g class="r-forearm">
+              <rect x="132" y="150" width="50" height="13" rx="6" fill="#b9ccd2"/>
+              <circle cx="184" cy="156" r="6" fill="#3ad1c5"/>
+            </g>
+          </g>
+        </svg>
       </div>
     </div>
   </div>
@@ -210,7 +277,7 @@
     </div>
     <div>
       <h4>Contacto</h4>
-      <a href="mailto:hola@strateviaapp.com">hola@strateviaapp.com</a>
+      <a href="mailto:contacto@strateviaapp.com">contacto@strateviaapp.com</a>
       <a href="https://www.strateviaapp.com">www.strateviaapp.com</a>
       <span class="foot-loc">Lima, Perú</span>
     </div>
@@ -218,7 +285,7 @@
   <div class="foot-bottom">© <span id="year"></span> Stratevia AI. Todos los derechos reservados.</div>
 </footer>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
