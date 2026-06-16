@@ -1,4 +1,4 @@
-/* ===== STRATEVIA AI — app.js final con Supabase ===== */
+/* ===== STRATEVIA AI — app.js ===== */
 (function(){
   'use strict';
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -8,25 +8,25 @@
   onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
 
   const toggle = document.getElementById('menu-toggle');
-  const nav = document.getElementById('nav');
+  const nav    = document.getElementById('nav');
   toggle.addEventListener('click', () => {
     const open = nav.classList.toggle('open');
-    toggle.classList.toggle('open', open); toggle.setAttribute('aria-expanded', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open);
   });
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     nav.classList.remove('open'); toggle.classList.remove('open');
   }));
 
-  const io = new IntersectionObserver((es)=>{
-    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
-  },{threshold:.15});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const io = new IntersectionObserver((es) => {
+    es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  /* ===== SUPABASE CONFIG ===== */
+  /* ===== SUPABASE ===== */
   const SUPABASE_URL  = 'https://niauybhdvijbxlhpuivp.supabase.co';
-  const SUPABASE_KEY  = 'sb_publishable_AGrD_O6xjnrspF5m5fGgUw_f8TMSuI4';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pYXV5YmhkdmlqYnhsaHB1aXZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NzUwNzAsImV4cCI6MjA5NTE1MTA3MH0.cBkbJTfDaKV7YrzInZN09D1aM4Vwa9x4GQBdOJ2icVI';
 
-  /* ===== FORMULARIO DE CONTACTO ===== */
   const form = document.getElementById('contact-form');
   const msg  = document.getElementById('form-msg');
 
@@ -42,42 +42,45 @@
 
     const btn = form.querySelector('button[type=submit]');
     btn.disabled = true;
-    msg.style.color = '';
+    msg.style.color = '#8fb0b8';
     msg.textContent = 'Enviando...';
 
     try {
       const res = await fetch(SUPABASE_URL + '/rest/v1/contactos', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'apikey':        SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type':  'application/json',
+          'apikey':        SUPABASE_ANON,
+          'Authorization': 'Bearer ' + SUPABASE_ANON,
           'Prefer':        'return=minimal'
         },
         body: JSON.stringify({
           nombre:  data.nombre,
-          empresa: data.empresa  || null,
+          empresa: data.empresa || null,
           correo:  data.correo,
-          mensaje: data.mensaje  || null
+          mensaje: data.mensaje || null
         })
       });
 
-      if(!res.ok) throw new Error('HTTP ' + res.status);
+      if(!res.ok){
+        const txt = await res.text();
+        throw new Error(res.status + ': ' + txt);
+      }
 
       msg.style.color = '#3ad1c5';
       msg.textContent = '¡Gracias, ' + data.nombre + '! Recibimos tu mensaje. Te contactaremos en menos de 24 horas.';
       form.reset();
 
-    } catch(err) {
-      msg.style.color = '#ff8080';
-      msg.textContent = 'Hubo un problema al enviar. Escríbenos directamente a contacto@strateviaapp.com';
+    } catch(err){
       console.error('Supabase error:', err);
+      msg.style.color = '#ff8080';
+      msg.textContent = 'Hubo un problema al enviar. Escríbenos a contacto@strateviaapp.com';
     } finally {
       btn.disabled = false;
     }
   });
 
-  /* ===== PARALLAX SUAVE DEL VIDEO ===== */
+  /* ===== PARALLAX VIDEO ===== */
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const frame = document.querySelector('.robot-frame');
   if(!frame) return;
@@ -89,7 +92,8 @@
   (function loop(){
     cx += (tx - cx) * .06;
     cy += (ty - cy) * .06;
-    frame.style.transform = `perspective(1000px) rotateY(${cx*0.12}deg) rotateX(${-cy*0.1}deg)`;
+    frame.style.transform =
+      `perspective(1000px) rotateY(${cx*0.12}deg) rotateX(${-cy*0.1}deg)`;
     requestAnimationFrame(loop);
   })();
 
