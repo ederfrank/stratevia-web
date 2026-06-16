@@ -1,63 +1,39 @@
-/* ===== HERO SPLIT CON VIDEO ===== */
+/* ===== HERO SPLIT CON VIDEO — full viewport ===== */
 #hero{
   position:relative;
-  min-height:100vh;
+  width:100vw;
+  height:100vh;
+  min-height:600px;
   display:flex;
-  align-items:center;
   overflow:hidden;
-  padding-top:80px;
-  background:radial-gradient(120% 90% at 80% 20%,rgba(20,50,70,.45),var(--bg) 72%)
+  background:var(--bg);
 }
-.hero-wrap{
-  position:relative;z-index:3;
-  max-width:1400px;width:100%;
-  margin:0 auto;
-  padding:0 clamp(20px,5vw,56px);
-  display:grid;
-  grid-template-columns:45fr 55fr;
-  gap:0;
-  align-items:stretch;
-  min-height:calc(100vh - 80px);
-}
+
+/* Columna izquierda: texto */
 .hero-left{
-  min-width:0;
+  position:relative;
+  z-index:3;
+  width:50%;
+  flex:0 0 50%;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  padding:clamp(32px,5vh,60px) clamp(20px,4vw,48px) clamp(32px,5vh,60px) 0;
+  padding:100px clamp(32px,4vw,64px) 60px clamp(32px,5vw,80px);
+  background:linear-gradient(90deg,var(--bg) 70%,transparent);
 }
-.badge{
-  display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--teal);
-  border:1px solid var(--line);padding:7px 14px;border-radius:40px;margin-bottom:22px;
-  background:rgba(58,209,197,.06);animation:fadeUp .8s both
-}
-.hero-title{
-  font-size:clamp(2rem,4.5vw,3.8rem);font-weight:800;line-height:1.05;
-  letter-spacing:-.02em;animation:fadeUp .8s .1s both
-}
-.hero-sub{
-  color:var(--muted);font-size:clamp(.95rem,1.6vw,1.1rem);
-  margin:18px 0 28px;animation:fadeUp .8s .2s both
-}
-.hero-sub strong{color:var(--ink)}
-.hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s .3s both}
-.hero-stats{display:flex;gap:28px;margin-top:36px;flex-wrap:wrap;animation:fadeUp .8s .4s both}
-.hero-stats div{display:flex;flex-direction:column}
-.hero-stats b{font-size:1.5rem;color:var(--teal);font-weight:800}
-.hero-stats span{font-size:.78rem;color:var(--muted)}
 
-/* Video: columna derecha de arriba a abajo, sin márgenes negativos */
+/* Columna derecha: video */
 .hero-visual{
-  position:relative;
-  align-self:stretch;
-  animation:fadeIn 1s .35s both;
+  position:absolute;
+  top:0;right:0;
+  width:58%;
+  height:100%;
+  z-index:1;
 }
 .robot-frame{
   position:absolute;
-  top:0; bottom:0; left:0; right:0;
+  inset:0;
   overflow:hidden;
-  border-left:1px solid rgba(58,209,197,.2);
-  box-shadow:-20px 0 60px rgba(0,0,0,.4);
 }
 .robot-video{
   width:100%;
@@ -68,54 +44,83 @@
 }
 .robot-overlay{
   position:absolute;inset:0;pointer-events:none;
-  background:
-    linear-gradient(90deg,rgba(6,18,26,.6) 0%,transparent 25%),
-    linear-gradient(0deg,rgba(6,18,26,.2),transparent 40%)
+  background:linear-gradient(90deg,var(--bg) 0%,rgba(6,18,26,.7) 20%,transparent 55%);
 }
 .glow-screen{
-  position:absolute;right:5%;top:15%;width:50%;height:45%;pointer-events:none;
-  background:radial-gradient(circle,rgba(70,227,160,.12),transparent 70%);
-  filter:blur(12px);animation:screenPulse 4s ease-in-out infinite;mix-blend-mode:screen
+  position:absolute;right:8%;top:20%;width:45%;height:40%;pointer-events:none;
+  background:radial-gradient(circle,rgba(70,227,160,.14),transparent 70%);
+  filter:blur(12px);animation:screenPulse 4s ease-in-out infinite;mix-blend-mode:screen;
 }
+
+/* hero-wrap es solo un wrapper invisible que no afecta el layout */
+.hero-wrap{
+  display:contents;
+}
+
+/* Estilos del texto */
+.badge{
+  display:inline-block;font-family:var(--mono);font-size:.78rem;color:var(--teal);
+  border:1px solid var(--line);padding:7px 14px;border-radius:40px;margin-bottom:22px;
+  background:rgba(58,209,197,.06);animation:fadeUp .8s both;align-self:flex-start;
+}
+.hero-title{
+  font-size:clamp(2rem,4vw,3.8rem);font-weight:800;line-height:1.05;
+  letter-spacing:-.02em;animation:fadeUp .8s .1s both;
+}
+.hero-sub{
+  color:var(--muted);font-size:clamp(.95rem,1.5vw,1.1rem);
+  margin:18px 0 28px;max-width:480px;animation:fadeUp .8s .2s both;
+}
+.hero-sub strong{color:var(--ink)}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s .3s both}
+.hero-stats{
+  display:flex;gap:28px;margin-top:36px;flex-wrap:wrap;
+  animation:fadeUp .8s .4s both;
+}
+.hero-stats div{display:flex;flex-direction:column}
+.hero-stats b{font-size:1.5rem;color:var(--teal);font-weight:800}
+.hero-stats span{font-size:.78rem;color:var(--muted)}
 
 @keyframes screenPulse{0%,100%{opacity:.3}50%{opacity:.7}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 .scroll-hint{
-  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:5;
 }
 .scroll-hint span{
   display:block;width:24px;height:38px;border:2px solid var(--muted);
-  border-radius:14px;position:relative
+  border-radius:14px;position:relative;
 }
 .scroll-hint span::after{
   content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);
   width:4px;height:7px;background:var(--teal);border-radius:3px;
-  animation:scrollD 1.6s infinite
+  animation:scrollD 1.6s infinite;
 }
 @keyframes scrollD{0%{opacity:0;top:7px}40%{opacity:1}100%{opacity:0;top:18px}}
 
-@media(max-width:980px){
-  .hero-wrap{
-    grid-template-columns:1fr;
-    align-items:start;
-    min-height:auto;
-    gap:28px;
+/* Responsive */
+@media(max-width:900px){
+  #hero{
+    height:auto;
+    min-height:100vh;
+    flex-direction:column;
   }
-  .hero-left{padding:40px 0 20px}
+  .hero-left{
+    width:100%;
+    flex:none;
+    padding:100px 24px 32px;
+    background:var(--bg);
+    z-index:3;
+  }
   .hero-visual{
     position:relative;
-    height:65vw;
-    max-height:480px;
+    width:100%;
+    height:60vw;
     min-height:260px;
+    max-height:420px;
   }
-  .robot-frame{
-    border-radius:14px;
-    border:1px solid rgba(58,209,197,.2);
+  .robot-overlay{
+    background:linear-gradient(0deg,var(--bg) 0%,transparent 30%);
   }
-}
-@media(max-width:560px){
-  .hero-visual{height:75vw;min-height:220px}
 }
 @media(prefers-reduced-motion:reduce){.glow-screen{animation:none}}
